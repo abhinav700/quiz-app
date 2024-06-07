@@ -8,7 +8,12 @@ const io = require("socket.io")(server, {
 });
 io.on("connection", (client) => {
     console.log("Client is connected");
-    client.on("event", (data) => { });
+    client.on("event", (data) => {
+        let message = JSON.parse(data);
+        console.log(message);
+        const type = message.type;
+        console.log(type);
+    });
     client.on("disconnect", () => { });
 });
 const PORT = 3000;

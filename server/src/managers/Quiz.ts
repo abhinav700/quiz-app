@@ -79,7 +79,7 @@ export class Quiz {
     this.problems.push(problem);
   }
 
-  private next() {
+   next() {
     this.activeProblem++;
     const problem = this.problems[this.activeProblem];
     if (problem) {
@@ -136,4 +136,6 @@ export class Quiz {
         return {type: this.currentState, problem: this.problems[this.activeProblem]}
     }
   }
+
+  
 }
