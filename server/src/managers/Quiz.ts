@@ -23,12 +23,12 @@ interface Problem {
   id: string;
   title: string;
   description: string;
-  image: string;
+  image?: string;
   answer: allowedSubmissions;
-  option: {
+  options: {
     id: number;
     title: string;
-  };
+  }[];
   submissions: Submission[];
   startTime: number;
 }
@@ -45,7 +45,7 @@ export class Quiz {
     this.problems = [];
     this.activeProblem = 0;
     this.users = [];
-    this.roomId = getRandomId(8);
+    this.roomId = roomId;
     this.currentState = "not_started";
   }
 
@@ -59,6 +59,7 @@ export class Quiz {
   }
 
   setActiveProblem(problem : Problem){
+      this.currentState = "question";
       problem.startTime = new Date().getTime()
       problem.submissions = [];
       IoManager.getIo().emit(CHANGE_PROBLEM, {
@@ -70,6 +71,7 @@ export class Quiz {
       
     }
   sendLeaderBoard(){
+    this.currentState = "leaderboard"
     const leaderBoard = this.getLeaderBoard();
     IoManager.getIo().to(this.roomId).emit("leaderboard",{
       leaderBoard
@@ -77,10 +79,12 @@ export class Quiz {
   }
    addProblem(problem: Problem) {
     this.problems.push(problem);
+    console.log(JSON.stringify(this.problems))
   }
 
    next() {
     this.activeProblem++;
+    console.log("Inside this method", this.activeProblem)
     const problem = this.problems[this.activeProblem];
     if (problem) {
         this.setActiveProblem(problem);
@@ -119,6 +123,7 @@ export class Quiz {
     user.points += isCorrect
       ? 1000 - (500 * (new Date().getTime() - problem.startTime)) / 20
       : 0;
+
   }
   getLeaderBoard() {
     return this.users.sort((a, b) => (a.points < b.points ? 1 : -1)).slice().splice(0,20);

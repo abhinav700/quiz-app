@@ -5,12 +5,12 @@ import { allowedSubmissions, Quiz } from "./Quiz";
 type addProblemArgs = {
   title: string;
   description: string;
-  image: string;
+  image?: string;
   answer: allowedSubmissions;
-  option: {
+  options: {
     id: number;
     title: string;
-  };
+  }[];
 };
 
 export class QuizManager {
@@ -67,7 +67,8 @@ export class QuizManager {
     quiz.next();
   }
 
-  addQuiz(roomId : string){
+  addQuiz(roomId: string) {
+    if (this.getQuiz(roomId)) return;
     const quiz = new Quiz(roomId);
     this.quizes.push(quiz);
   }

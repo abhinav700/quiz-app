@@ -1,21 +1,21 @@
 import http from "http";
 import { IoManager } from "./managers/IoManager";
+import { UserManager } from "./managers/UserManager";
   
 const io = IoManager.getIo()
+const PORT = 5000;
 
-io.on("connection", (client)=>{
-    client.on("event", data => {
-      console.log(data);
-    })
-    client.on("disconnect", () => {
+try {
+  io.listen(PORT)
+  console.log("server started at " + PORT);
+} catch (error) {
+  console.log(error)
+}
 
-    })
-
+const userManager = new UserManager();
+io.on("connection", (socket)=>{
+       userManager.addUser(socket)
 })
-
-const PORT = 3000;
-io.listen(3000)
-
 
 
 
