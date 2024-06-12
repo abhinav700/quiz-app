@@ -38,7 +38,7 @@ export class Quiz {
   private problems: Problem[];
   private activeProblem: number;
   private users: User[];
-  private currentState : "leaderboard" | "question" | "not_started" | "is_ended";  
+  private currentState : "leaderboard" | "problem" | "not_started" | "is_ended";  
  
   constructor(roomId: string) {
     this.hasStarted = false;
@@ -47,6 +47,13 @@ export class Quiz {
     this.users = [];
     this.roomId = roomId;
     this.currentState = "not_started";
+
+    setInterval(()=> {
+        console.log("____DEBUGGING LOG______");
+        console.log(this.currentState);
+        console.log(this.problems.length);
+        console.log(this.activeProblem)
+    }, 3000)
   }
 
   start() {
@@ -57,12 +64,12 @@ export class Quiz {
     });
     this.setActiveProblem(this.problems[0]);
   }
-
+  
   setActiveProblem(problem : Problem){
-      this.currentState = "question";
+      this.currentState = "problem";
       problem.startTime = new Date().getTime()
       problem.submissions = [];
-      IoManager.getIo().emit(CHANGE_PROBLEM, {
+      IoManager.getIo().to(this.roomId).emit("problem", {
         problem,
       });
       setTimeout(() => {
@@ -79,16 +86,15 @@ export class Quiz {
   }
    addProblem(problem: Problem) {
     this.problems.push(problem);
-    console.log(JSON.stringify(this.problems))
   }
 
    next() {
     this.activeProblem++;
-    console.log("Inside this method", this.activeProblem)
     const problem = this.problems[this.activeProblem];
     if (problem) {
         this.setActiveProblem(problem);
     } else {
+      this.activeProblem--;
       // IoManager.getIo().emit(END_QUIZ);
     }
   }
@@ -126,7 +132,7 @@ export class Quiz {
 
   }
   getLeaderBoard() {
-    return this.users.sort((a, b) => (a.points < b.points ? 1 : -1)).slice().splice(0,20);
+    return this.users.sort((a, b) => (a.points < b.points ? 1 : -1)).slice(0,20);
   }
 
   getCurrentState(){
@@ -137,7 +143,7 @@ export class Quiz {
         return {type:this.currentState, leaderBoard: this.getLeaderBoard()}
       case "leaderboard":
         return {type:this.currentState, leaderboard:this.getLeaderBoard()}
-      case "question":
+      case "problem":
         return {type: this.currentState, problem: this.problems[this.activeProblem]}
     }
   }

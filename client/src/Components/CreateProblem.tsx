@@ -33,11 +33,13 @@ const CreateProblem = ({ socket, roomId }: { socket: Socket, roomId: string }) =
                     setTitle(e.target.value);
                 }}
                 value={title} />
-
+   Description - <input type="text" onChange={(e) => {
+            setDescription(e.target.value)
+        }}></input>
             {
                 [1, 2, 3, 4].map(optionId =>
                     <div>
-                        <input type = 'radio' checked={optionId == answer} onChange={(e)=>setAnswer(answer => optionId)}/>
+                        <input type='radio' checked={optionId == answer} onChange={(e) => setAnswer(answer => optionId)} />
                         option {optionId}
 
                         <input type="text" className="bg-gray-500 my-1" onChange={(e) => {

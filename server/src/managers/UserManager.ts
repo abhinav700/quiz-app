@@ -17,7 +17,6 @@ export class UserManager {
   private createHandlers(socket: Socket) {
     socket.on("join-admin", (data) => {
       if (data.password != ADMIN_PASSWORD) return;
-      console.log(data);
 
       socket.on("createProblem", (data) => {
         this.quizManager.addProblem(data.roomId, data.problem);
@@ -46,15 +45,15 @@ export class UserManager {
         userId,
         state: this.quizManager.getCurrentState(data.roomId),
       });
-
-      socket.on("submit", (data: any) => {
-        data = JSON.parse(data);
-        const userId = data.userId;
-        const problemId = data.problemId;
-        const submission: allowedSubmissions = data.submission;
-        const roomId = data.submission;
-        this.quizManager.submit(roomId, problemId, submission, userId);
-      });
+      socket.join(data.roomId); 
+    });
+    socket.on("submit", (data: any) => {
+      data = JSON.parse(data);
+      const userId = data.userId;
+      const problemId = data.problemId;
+      const submission: allowedSubmissions = data.submission;
+      const roomId = data.submission;
+      this.quizManager.submit(roomId, problemId, submission, userId);
     });
   }
 }
