@@ -3,6 +3,7 @@ import {  createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Admin from './Components/Admin';
 import './App.css'
 import User from './Components/User';
+import JoinRoom from './screens/JoinRoom';
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
   },
   {
     path:"/",
-    element:<div>Hello World</div>
+    element:<JoinRoom/>
   }
 ]);
 function App() {
