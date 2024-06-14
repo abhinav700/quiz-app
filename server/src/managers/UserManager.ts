@@ -34,8 +34,13 @@ export class UserManager {
         data = JSON.parse(data);
         const userId = data.userId;
         const problemId = data.problemId;
-        const submission: allowedSubmissions = data.submission;
-        this.quizManager.submit(data.roomId, problemId, submission, userId);
+        try {
+          const submission: allowedSubmissions = data.submission;
+          this.quizManager.submit(data.roomId, problemId, submission, userId);  
+        } catch (error) {
+          console.log("INPUT IS INVALID")
+        }
+        
       });
     });
 
@@ -52,7 +57,7 @@ export class UserManager {
       const userId = data.userId;
       const problemId = data.problemId;
       const submission: allowedSubmissions = data.submission;
-      const roomId = data.submission;
+      const roomId = data.roomId;
       this.quizManager.submit(roomId, problemId, submission, userId);
     });
   }
