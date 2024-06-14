@@ -4,8 +4,10 @@ const JoinRoom = () => {
     const [roomId, setRoomId] = useState<string>("")
     const navigate = useNavigate()
     const onClickHandler = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
-        if(roomId === "")
+        if(roomId === ""){
             alert("You have not entered anything");
+            return;
+        }
         return navigate(`/user?roomId=${roomId}`)
     }
     return (
