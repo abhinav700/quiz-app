@@ -56,7 +56,7 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
 
     socket.on("leaderboard", data => {
       setCurrentState("leaderboard");
-      setLeaderBoard(data.leaderboard())
+      setLeaderBoard(data.leaderboard)
     })
 
     socket.on("problem", (data) => {
