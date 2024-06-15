@@ -2,7 +2,7 @@ import React from 'react';
 import {  createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Admin from './Components/Admin';
 import './App.css'
-import User from './Components/User';
+import User from './screens/JoinQuiz';
 import JoinRoom from './screens/JoinRoom';
 const router = createBrowserRouter([
   {
