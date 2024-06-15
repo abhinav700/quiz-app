@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
-import CurrentQuestion from './CurrentQuestion';
-import LeaderBoard from './LeaderBoard';
+import CurrentQuestion from '../Components/CurrentQuestion';
+import LeaderBoard from '../Components/LeaderBoard';
 
-const User = () => {
+const JoinQuiz = () => {
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   if (!submitted) {
-    return <div>
-      Name - <input type="text" placeholder='name' onChange={(e) => setName(name => e.target.value)} value={name} />
-      <button onClick={()=> {setSubmitted(submitted => true)}}> Submit</button>;
+    return <div className='flex flex-col justify-center items-center mt-10 text-black'>
+
+      <h1 className='text-[45px] font-bold'>Quizily</h1>
+      <div className="mt-10">
+        <p className='font-medium'>Enter your name</p>
+        <input className='mt-4 bg-gray-100 w-[500px] py-3 px-3 rounded-sm text-gray-900' type="text" placeholder='John Doe' onChange={(e) => setName(name => e.target.value)} value={name} />
+      </div>
+      <button className='mt-8 hover:opacity-90 bg-[#2e2b2b] text-white px-8 font-bold py-4 rounded-full' onClick={() => { setSubmitted(submitted => true) }}> Join Quiz</button>;
     </div>
   }
-  return <UserLoggedIn name = {name}/>
+  return <UserLoggedIn name={name} />
 }
 
-export const UserLoggedIn = ({name}:{name:any}) => {
+export const UserLoggedIn = ({ name }: { name: any }) => {
   const [socket, setSocket] = useState<null | Socket>(null)
   const [currrentState, setCurrentState] = useState("not_started");
   const [searchParams, setSearchParams] = useSearchParams()
@@ -38,18 +43,18 @@ export const UserLoggedIn = ({name}:{name:any}) => {
 
     socket.on("init", ({ userId, state }) => {
       setUserId(userId);
-      if(state.leaderboard){
+      if (state.leaderboard) {
         setLeaderBoard(state.leaderboard);
       }
-      
-      if(state.problem){
+
+      if (state.problem) {
         setCurrentQuestion(currentQuestion => state.problem);
       }
 
       setCurrentState(currrentState => state.type);
     })
 
-    socket.on("leaderboard", data=>{
+    socket.on("leaderboard", data => {
       setCurrentState("leaderboard");
       setLeaderBoard(data.leaderboard())
     })
@@ -88,4 +93,4 @@ export const UserLoggedIn = ({name}:{name:any}) => {
 
 }
 
-export default User
+export default JoinQuiz
