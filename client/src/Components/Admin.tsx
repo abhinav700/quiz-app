@@ -12,9 +12,7 @@ const Admin = () => {
   useEffect(() => {
     const socket = io('http://localhost:5000');
     setSocket(socket)
-    console.log("hello")
     socket.on("connect", () => {
-      console.log(socket.id);
       socket.emit("join-admin", {
         password: "ADMIN_PASSWORD"
       
