@@ -30,18 +30,6 @@ export class UserManager {
         this.quizManager.addQuiz(data.roomId);
       });
 
-      socket.on("submit", (data: any) => {
-        data = JSON.parse(data);
-        const userId = data.userId;
-        const problemId = data.problemId;
-        try {
-          const submission: allowedSubmissions = data.submission;
-          this.quizManager.submit(data.roomId, problemId, submission, userId);  
-        } catch (error) {
-          console.log("INPUT IS INVALID")
-        }
-        
-      });
     });
 
     socket.on("join", (data) => {
@@ -52,8 +40,8 @@ export class UserManager {
       });
       socket.join(data.roomId); 
     });
+
     socket.on("submit", (data: any) => {
-      data = JSON.parse(data);
       const userId = data.userId;
       const problemId = data.problemId;
       const submission: allowedSubmissions = data.submission;

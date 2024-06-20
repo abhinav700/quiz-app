@@ -28,6 +28,7 @@ export class QuizManager {
 
   public addUser(roomId: string, name: string) {
     const userId = this.getQuiz(roomId)?.addUser(name);
+    return userId;
   }
 
   private getQuiz(roomId: string) {
@@ -40,8 +41,11 @@ export class QuizManager {
     submission: allowedSubmissions,
     userId: string
   ) {
+
     const quiz = this.quizes.find((q) => q.roomId === roomId);
-    if (quiz) quiz.submit(roomId, problemId, submission, userId);
+    if (quiz){
+      quiz.submit(roomId, problemId, submission, userId);
+    }
   }
 
   getCurrentState(roomId: string) {

@@ -38,8 +38,8 @@ export class Quiz {
   private problems: Problem[];
   private activeProblem: number;
   private users: User[];
-  private currentState : "leaderboard" | "problem" | "not_started" | "is_ended";  
- 
+  private currentState: "leaderboard" | "problem" | "not_started" | "is_ended";
+
   constructor(roomId: string) {
     this.hasStarted = false;
     this.problems = [];
@@ -48,12 +48,12 @@ export class Quiz {
     this.roomId = roomId;
     this.currentState = "not_started";
 
-    setInterval(()=> {
-        console.log("____DEBUGGING LOG______");
-        console.log(this.currentState);
-        console.log(this.problems.length);
-        console.log(this.activeProblem)
-    }, 3000)
+    // setInterval(()=> {
+    //     console.log("____DEBUGGING LOG______");
+    //     console.log(this.currentState);
+    //     console.log(this.problems.length);
+    //     console.log(this.activeProblem)
+    // }, 3000)
   }
 
   start() {
@@ -64,35 +64,34 @@ export class Quiz {
     });
     this.setActiveProblem(this.problems[0]);
   }
-  
-  setActiveProblem(problem : Problem){
-      this.currentState = "problem";
-      problem.startTime = new Date().getTime()
-      problem.submissions = [];
-      IoManager.getIo().to(this.roomId).emit("problem", {
-        problem,
-      });
-      setTimeout(() => {
-        this.sendLeaderBoard();
-      }, PROBLEM_TIME_S * 1000);
-      
-    }
-  sendLeaderBoard(){
-    this.currentState = "leaderboard"
-    const leaderBoard = this.getLeaderBoard();
-    IoManager.getIo().to(this.roomId).emit("leaderboard",{
-      leaderBoard
+
+  setActiveProblem(problem: Problem) {
+    this.currentState = "problem";
+    problem.startTime = new Date().getTime();
+    problem.submissions = [];
+    IoManager.getIo().to(this.roomId).emit("problem", {
+      problem,
+    });
+    setTimeout(() => {
+      this.sendLeaderBoard();
+    }, PROBLEM_TIME_S * 1000);
+  }
+  sendLeaderBoard() {
+    this.currentState = "leaderboard";
+    const leaderboard = this.getLeaderBoard();
+    IoManager.getIo().to(this.roomId).emit("leaderboard", {
+      leaderboard,
     });
   }
-   addProblem(problem: Problem) {
+  addProblem(problem: Problem) {
     this.problems.push(problem);
   }
 
-   next() {
+  next() {
     this.activeProblem++;
     const problem = this.problems[this.activeProblem];
     if (problem) {
-        this.setActiveProblem(problem);
+      this.setActiveProblem(problem);
     } else {
       this.activeProblem--;
       // IoManager.getIo().emit(END_QUIZ);
@@ -116,7 +115,9 @@ export class Quiz {
   ) {
     const problem = this.problems.find((x) => x.id == problemId);
     const user = this.users.find((x) => x.id == userId);
+
     if (!problem || !user) return;
+
     //each user can make only one submission to a problem
     if (problem.submissions.find((x) => x.userId === userId)) return;
     const isCorrect: boolean = problem.answer === submission;
@@ -127,26 +128,28 @@ export class Quiz {
       optionSelected: submission,
     });
     user.points += isCorrect
-      ? 1000 - (500 * (new Date().getTime() - problem.startTime)) / 20
+      ? 1000 - (500 * ((new Date().getTime() - problem.startTime) / 1000)) / 20
       : 0;
-
   }
   getLeaderBoard() {
-    return this.users.sort((a, b) => (a.points < b.points ? 1 : -1)).slice(0,20);
+    return this.users
+      .sort((a, b) => (a.points < b.points ? 1 : -1))
+      .slice(0, 20);
   }
 
-  getCurrentState(){
+  getCurrentState() {
     switch (this.currentState) {
       case "not_started":
-        return {type:this.currentState};
+        return { type: this.currentState };
       case "is_ended":
-        return {type:this.currentState, leaderBoard: this.getLeaderBoard()}
+        return { type: this.currentState, leaderboard: this.getLeaderBoard() };
       case "leaderboard":
-        return {type:this.currentState, leaderboard:this.getLeaderBoard()}
+        return { type: this.currentState, leaderboard: this.getLeaderBoard() };
       case "problem":
-        return {type: this.currentState, problem: this.problems[this.activeProblem]}
+        return {
+          type: this.currentState,
+          problem: this.problems[this.activeProblem],
+        };
     }
   }
-
-  
 }
