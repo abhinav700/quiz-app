@@ -5,7 +5,7 @@ import CurrentQuestion from '../Components/CurrentQuestion';
 import LeaderBoard from '../Components/LeaderBoard';
 import UserAvatar from '../Components/UserAvatar';
 import { useParams } from 'react-router-dom';
-const JoinQuiz = () => {
+const User = () => {
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [avatarImage, setAvatarImage] = useState("")
@@ -33,9 +33,10 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
   const [currrentState, setCurrentState] = useState("not_started");
   const [searchParams, setSearchParams] = useSearchParams()
   const roomId = searchParams.get("roomId");
-  const [currentQuestion, setCurrentQuestion] = useState(null)
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null)
   const [leaderboard, setLeaderBoard] = useState([])
   const [userId, setUserId] = useState("");
+  
   useEffect(() => {
     const socket = io("http://localhost:5000")
     setSocket(socket)
@@ -50,11 +51,11 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
     socket.on("init", ({ userId, state }) => {
       setUserId(userId);
       if (state.leaderboard) {
-        setLeaderBoard(state.leaderboard);
+        setLeaderBoard(leaderboard => state.leaderboard);
       }
 
       if (state.problem) {
-        setCurrentQuestion(currentQuestion => state.problem);
+        setCurrentQuestion((currentQuestion:any) => state.problem);
       }
 
       setCurrentState(currrentState => state.type);
@@ -62,13 +63,22 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
 
     socket.on("leaderboard", data => {
       setCurrentState("leaderboard");
-      setLeaderBoard(data.leaderboard)
+      setLeaderBoard(leaderboard => data.leaderboard)
     })
 
     socket.on("problem", (data) => {
       setCurrentState("problem")
       setCurrentQuestion(data.problem);
     })
+
+
+
+    return () =>{
+      socket.off("problem");
+      socket.off("eaderboard");
+      socket.off("connect");
+      socket.off("init");
+    }
   }, [])
 
   if (currrentState === "not_started") {
@@ -82,7 +92,8 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
 
   if (currrentState === "problem") {
     return (
-      <CurrentQuestion question={currentQuestion} />
+      <CurrentQuestion question={currentQuestion} socket = {socket!} userId={userId} roomId={roomId!} problemId={currentQuestion!.id}
+      />
     )
   }
   if (currrentState === "leaderboard") {
@@ -99,4 +110,4 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
 
 }
 
-export default JoinQuiz
+export default User
