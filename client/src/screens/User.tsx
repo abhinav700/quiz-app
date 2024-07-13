@@ -83,8 +83,9 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
 
   if (currrentState === "not_started") {
     return (
-      <div>
-        The quiz has not started yet
+      <div className='w-full h-[80vh] flex flex-col items-center justify-center'>
+        <h1 className='text-[50px] font-bold'>The quiz has not started yet.</h1>
+        <h3 className='my-3 text-[20px] text-gray-500 font-bold'>Waiting for the admin to start the quiz</h3>
       </div>
     )
   }
