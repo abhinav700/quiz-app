@@ -1,0 +1,13 @@
+#leaderboard-points-bar{
+    animation-name:bar_width_change;
+    animation-duration: 2s;
+
+}
+@keyframes bar_width_change{
+    from{
+        max-width: 0px;
+    }
+    to{
+        max-width: 1000px;
+    }
+}

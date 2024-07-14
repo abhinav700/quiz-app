@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import CurrentQuestion from '../Components/CurrentQuestion';
-import LeaderBoard from '../Components/LeaderBoard';
+import LeaderBoard from '../Components/Leaderboard/LeaderBoard';
 import UserAvatar from '../Components/UserAvatar';
 import { useParams } from 'react-router-dom';
 const User = () => {
