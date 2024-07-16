@@ -1,13 +1,43 @@
-#leaderboard-points-bar{
-    animation-name:bar_width_change;
-    animation-duration: 2s;
-
+#leaderboard-points-bar {
+  animation-name: bar_width_change;
+  animation-duration: 4s;
 }
-@keyframes bar_width_change{
+.user-avatar {
+  position: relative;
+  animation-name: avatar-position-change;
+  animation-fill-mode: forwards;
+  animation-duration: 4s;
+  animation-delay: 3s;
+}
+.username{
+    animation-name:shift-user-name;
+    animation-fill-mode:forwards;
+    animation-duration: 1s;
+    animation-delay: 3s;
+    position: relative;
+}
+@keyframes bar_width_change {
+  from {
+    max-width: 0px;
+  }
+  to {
+    max-width: 1000px;
+  }
+}
+@keyframes avatar-position-change {
+  from {
+    transform: translate3d(0%, 0, 0);
+  }
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes shift-user-name{
     from{
-        max-width: 0px;
+        left:0px;
     }
     to{
-        max-width: 1000px;
+        left:30px;
     }
 }
