@@ -33,7 +33,7 @@ export class UserManager {
     });
 
     socket.on("join", (data) => {
-      const userId = this.quizManager.addUser(data.roomId, data.name);
+      const userId = this.quizManager.addUser(data.roomId, data.name,data.avatarUrl);
       socket.emit("init", {
         userId,
         state: this.quizManager.getCurrentState(data.roomId),

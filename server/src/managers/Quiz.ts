@@ -8,6 +8,7 @@ interface User {
   name: string;
   id: string;
   points: number;
+  avatarUrl:string
 }
 
 export type allowedSubmissions = 1 | 2 | 3 | 4;
@@ -97,11 +98,12 @@ export class Quiz {
       // IoManager.getIo().emit(END_QUIZ);
     }
   }
-  addUser(name: string) {
+  addUser(name: string, avatarUrl:string) {
     const id: string = getRandomId(7);
     this.users.push({
       id,
       name,
+      avatarUrl,
       points: 0,
     });
     return id;

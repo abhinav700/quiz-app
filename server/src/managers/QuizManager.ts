@@ -26,8 +26,8 @@ export class QuizManager {
     quiz.start();
   }
 
-  public addUser(roomId: string, name: string) {
-    const userId = this.getQuiz(roomId)?.addUser(name);
+  public addUser(roomId: string, name: string, avatarUrl:string) {
+    const userId = this.getQuiz(roomId)?.addUser(name,avatarUrl);
     return userId;
   }
 

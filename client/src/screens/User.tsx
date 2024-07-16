@@ -8,16 +8,18 @@ import { useParams } from 'react-router-dom';
 const User = () => {
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [avatarImage, setAvatarImage] = useState("")
-  const params = useParams()
+  const [avatarUrl, setAvatarUrl] = useState("")
+  const [searchParams, setSearchParams] = useSearchParams()
+  const roomId = searchParams.get("roomId");
   useEffect(()=>{
-      setAvatarImage(prevAvatarImage => `${params.roomId}${Math.random()*100}`)
-  },[])
+      setAvatarUrl(prevAvatarUrl => `${roomId}${Math.random()*100}`)
+    },[])
+
   if (!submitted) {
     return <div className='flex flex-col justify-center items-center mt-10 text-black'>
 
       <h1 className='text-[45px] font-bold'>Quizily</h1>
-        <UserAvatar url = {avatarImage} />
+        <UserAvatar url = {avatarUrl} />
       <div className="mt-10">
         <p className='font-medium'>Enter your name</p>
         <input className='mt-4 bg-gray-100 w-[500px] py-3 px-3 rounded-sm text-gray-900' type="text" placeholder='John Doe' onChange={(e) => setName(name => e.target.value)} value={name} />
@@ -25,14 +27,12 @@ const User = () => {
       <button className='mt-8 hover:opacity-90 bg-[#2e2b2b] text-white px-8 font-bold py-4 rounded-full' onClick={() => { setSubmitted(submitted => true) }}> Join Quiz</button>
     </div>
   }
-  return <UserLoggedIn name={name} />
+  return <UserLoggedIn name={name} avatarUrl = {avatarUrl} roomId = {roomId}/>
 }
 
-export const UserLoggedIn = ({ name }: { name: any }) => {
+export const UserLoggedIn = ({ name,avatarUrl,roomId }: { name: string, avatarUrl: string,roomId:any }) => {
   const [socket, setSocket] = useState<null | Socket>(null)
   const [currrentState, setCurrentState] = useState("not_started");
-  const [searchParams, setSearchParams] = useSearchParams()
-  const roomId = searchParams.get("roomId");
   const [currentQuestion, setCurrentQuestion] = useState<any>(null)
   const [leaderboard, setLeaderBoard] = useState([])
   const [userId, setUserId] = useState("");
@@ -44,7 +44,8 @@ export const UserLoggedIn = ({ name }: { name: any }) => {
     socket.on("connect", () => {
       socket.emit("join", {
         roomId,
-        name
+        name,
+        avatarUrl
       })
     })
 
